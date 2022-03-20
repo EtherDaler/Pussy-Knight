@@ -2,19 +2,6 @@ import pygame
 from Models import Sprite, Simple_Weapon, Projectile_Weapon
 
 class Knight(Sprite):
-    weapon = None   # Оружие
-    xp = 0          # Опыт
-    kills = 0       # Убийства
-    xp_need = 0     # Необходимо опыта, чтобы перейти на следущий уровень
-
-    def __init__(self, hp=100, armor=1, speed=10, level=1, live=True, damage=15, range=5):
-        self.hp = hp + (hp * level // 10)
-        self.armor = armor + (armor * level // 13)
-        self.speed = speed + (speed * level // 20)
-        self.level = level
-        self.live = live
-        self.weapon = Simple_Weapon(damage + (damage * level // 10), range)
-        self.xp_need = level * 200
 
     # Повышение уровня
     def level_up(self):
