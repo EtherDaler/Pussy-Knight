@@ -18,3 +18,17 @@ class SimpleEnemy(Sprite):
             self.weapon = Simple_Weapon(damage + (damage * level // 12), range)
         else:
             self.weapon = Projectile_Weapon(range, p_speed, damage + (damage * level // 12), img)
+
+    def get_dist(self, hero):
+        return abs((self.coords[0] - hero.coords[0])**2 - (self.coords[1] - hero.coords[1])**2)
+
+    def check_hero(self, hero, map): # проверка видимости игрока
+        if get_dist(self, hero)<=self.view_range**2:
+            def block_on_line(self, hero, block):
+                return False # проверка свободности линии, затычка
+            if (1-sum([int(block_on_line(self, hero, block)) for block in map])):
+                return True
+        return False
+
+    def attack(self, hero):
+         

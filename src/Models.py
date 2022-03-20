@@ -6,6 +6,7 @@ class Sprite:
     view_range = 0  # Дальность обзора
     level = 0       # Уровень
     live = True     # Живой/Мертвый
+    coords = (0, 0) # Позиция
 
 # Родительский Класс для всех видов оружия ближнего боя
 class Simple_Weapon:
