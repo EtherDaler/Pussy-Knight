@@ -27,7 +27,7 @@ class Game:
             for yidx, line in enumerate(file):
                 for xidx, char in enumerate(line):
                     if char == "1":
-                        self.walls.append(vec(xidx, yidx))
+                        self.walls.append((xidx, yidx))
         print(self.walls)
 
     def game_start(self):

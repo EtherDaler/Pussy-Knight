@@ -41,9 +41,10 @@ class Sprite:
                                                      self.coords, self.orientation, proj_img, False))
 
     # Получение нужного фрейма спрайта с ассета
-    def get_image(self, frame: int, width: int, height: int, scale: int, colour: tuple):
+    def get_image(self, frame_x: int, frame_y: int, width: int, height: int, scale: int, colour: tuple):
         image = pygame.Surface((width, height)).convert_alpha()
-        image.blit(self.sheet, (0, 0), ((frame * width), 0, width, height))
+        image.blit(self.sheet, (0, 0),
+                   ((frame_x * width), (frame_y * height), (frame_x * width + width), (frame_y * height + height)))
         image = pygame.transform.scale(image, (width * scale, height * scale))
         image.set_colorkey(colour)
 
@@ -54,29 +55,225 @@ class Sprite:
     :param kwargs: сюда передаются все изображения для анимации
     Важно: Анимация должна работать для всех направлений
     """
+
     # Анимация стоячего спрайта
-    def animation_stay(self, **kwargs):
-        pass
+    def animation_stay(self):
+        if self.orientation == 0:
+            self.get_image(0, 0, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 0, 32, 32, 3, (255, 255, 255))
+        elif self.orientation == 1:
+            self.get_image(0, 1, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 1, 32, 32, 3, (255, 255, 255))
+        elif self.orientation == 2:
+            self.get_image(0, 2, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 2, 32, 32, 3, (255, 255, 255))
+        elif self.orientation == 3:
+            self.get_image(0, 3, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 3, 32, 32, 3, (255, 255, 255))
+        elif self.orientation == 4:
+            self.get_image(0, 4, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 4, 32, 32, 3, (255, 255, 255))
+        elif self.orientation == 5:
+            self.get_image(0, 5, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 5, 32, 32, 3, (255, 255, 255))
+        elif self.orientation == 6:
+            self.get_image(0, 6, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 6, 32, 32, 3, (255, 255, 255))
+        elif self.orientation == 7:
+            self.get_image(0, 7, 32, 32, 3, (255, 255, 255))
+            self.get_image(1, 7, 32, 32, 3, (255, 255, 255))
 
     # Анимация атаки
-    def animation_atack(self, **kwargs):
-        pass
+    def animation_atack(self):
 
-    # Анимация ходьбы
-    def animation_walk(self, **kwargs):
-        pass
+        if self.orientation == 0:
+            self.get_image(4, 0, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 0, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 0, 32, 32, 3, (255, 255, 255))
+        if self.orientation == 1:
+            self.get_image(4, 1, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 1, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 1, 32, 32, 3, (255, 255, 255))
+        if self.orientation == 2:
+            self.get_image(4, 2, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 2, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 2, 32, 32, 3, (255, 255, 255))
+        if self.orientation == 3:
+            self.get_image(4, 3, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 3, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 3, 32, 32, 3, (255, 255, 255))
+        if self.orientation == 4:
+            self.get_image(4, 4, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 4, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 4, 32, 32, 3, (255, 255, 255))
+        if self.orientation == 5:
+            self.get_image(4, 5, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 5, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 5, 32, 32, 3, (255, 255, 255))
+        if self.orientation == 6:
+            self.get_image(4, 6, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 6, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 6, 32, 32, 3, (255, 255, 255))
+        if self.orientation == 7:
+            self.get_image(4, 7, 32, 32, 3, (255, 255, 255))
+            self.get_image(5, 7, 32, 32, 3, (255, 255, 255))
+            self.get_image(6, 7, 32, 32, 3, (255, 255, 255))
 
-    # Анимация стрельбы
-    def animation_fire(self, **kwargs):
-        pass
+        # Анимация ходьбы
+        def animation_walk(self):
+            if self.orientation == 0:
+                self.get_image(2, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 0, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 1:
+                self.get_image(2, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 1, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 2:
+                self.get_image(2, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 2, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 3:
+                self.get_image(2, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 3, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 4:
+                self.get_image(2, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 4, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 5:
+                self.get_image(2, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 5, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 6:
+                self.get_image(2, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 6, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 7:
+                self.get_image(2, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(3, 7, 32, 32, 3, (255, 255, 255))
 
-    # Анимация смерти
-    def animation_death(self, **kwargs):
-        pass
+        # Анимация стрельбы
+        def animation_fire(self, **kwargs):
+            if self.orientation == 0:
+                self.get_image(8, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 0, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 1:
+                self.get_image(8, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 1, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 2:
+                self.get_image(8, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 2, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 3:
+                self.get_image(8, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 3, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 4:
+                self.get_image(8, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 4, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 5:
+                self.get_image(8, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 5, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 6:
+                self.get_image(8, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 6, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 7:
+                self.get_image(8, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(9, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(10, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(11, 7, 32, 32, 3, (255, 255, 255))
 
-    # Анимация победы
-    def animation_win(self, **kwargs):
-        pass
+        # Анимация смерти
+        def animation_death(self, **kwargs):
+            if self.orientation == 0:
+                self.get_image(12, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 0, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 1:
+                self.get_image(12, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 1, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 2:
+                self.get_image(12, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 2, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 3:
+                self.get_image(12, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 3, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 4:
+                self.get_image(12, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 4, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 5:
+                self.get_image(12, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 5, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 6:
+                self.get_image(12, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 6, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 7:
+                self.get_image(12, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(13, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(14, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(15, 7, 32, 32, 3, (255, 255, 255))
+
+        # Анимация победы
+        def animation_win(self, **kwargs):
+            if self.orientation == 0:
+                self.get_image(17, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 0, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 0, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 1:
+                self.get_image(17, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 1, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 1, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 2:
+                self.get_image(17, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 2, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 2, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 3:
+                self.get_image(17, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 3, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 3, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 4:
+                self.get_image(17, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 4, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 4, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 5:
+                self.get_image(17, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 5, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 5, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 6:
+                self.get_image(17, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 6, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 6, 32, 32, 3, (255, 255, 255))
+            if self.orientation == 7:
+                self.get_image(17, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(18, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(19, 7, 32, 32, 3, (255, 255, 255))
+                self.get_image(20, 7, 32, 32, 3, (255, 255, 255))
 
     """
     Методы отвечающие за движение
@@ -89,30 +286,35 @@ class Sprite:
                 i.orientation = self.orientation
 
     def move_front(self):
+        self.animation_walk()
         self.coords[1] += self.speed
         self.orientation = 0
         if self.hand is False:
             self.move_bullets()
 
     def move_back(self):
+        self.animation_walk()
         self.coords[1] -= self.speed
         self.orientation = 4
         if self.hand is False:
             self.move_bullets()
 
     def move_right(self):
+        self.animation_walk()
         self.coords[0] += self.speed
         self.orientation = 2
         if self.hand is False:
             self.move_bullets()
 
     def move_left(self):
+        self.animation_walk()
         self.coords[0] -= self.speed
         self.orientation = 6
         if self.hand is False:
             self.move_bullets()
 
     def move_diag(self, x: str, y: str):
+        self.animation_walk()
         """
         :param x: принимает +-
         :param y: принимает +-
@@ -148,17 +350,20 @@ class Sprite:
         self.hp -= damage
         if self.hp <= 0:
             self.hp = 0
+            self.animation_death()
             self.live = False
             return 1
         return 0
 
     # Атака в ближнем бою
     def attack(self, goal: object):
+        self.animation_atack()
         if goal is not None:
             self.kills += goal.get_damage(self.weapon.damage)
 
     # Стрельба
     def fire(self, goal: list, walls: list):
+        self.animation_fire()
         """
         :param goal: Для героя передается список всех врагов на карте
                      Для врагов передается список из одного элемента - героя
@@ -222,6 +427,8 @@ class Sprite:
             self.weapon[-1].coords[0] -= self.weapon[-1].speed
             self.weapon[-1].coords[1] += self.weapon[-1].speed
 
+    def draw(self, screen: object):
+        screen.blit(self.animation_stay(), self.coords)
 
 
 

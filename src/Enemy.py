@@ -24,3 +24,42 @@ class SimpleEnemy(Sprite):
             return True
         return False
 
+    # Бот обходит препятствия
+    def get_around(self, walls: list):
+        pass
+
+    # Бот движется к игроку
+    def move_to_hero(self, hero: object):
+        pass
+
+    # Бот атакует игрока
+    def hero_atack(self, hero: object):
+        pass
+
+    # Бот Стреляет в игрока
+    def hero_fire(self, hero: object):
+        pass
+
+    # Бот бродит по карте
+    def walk(self, walls: list, coords_start: tuple, coords_finish: tuple):
+        """
+        :param walls: Список стен
+        :param coords_start: Откуда враг начинает бродить
+        :param coords_finish: До куда враг бродит
+        Враг бродит циклично
+        """
+        pass
+
+    def enemy_active(self, hero: object, walls: list, coords_start: tuple, coords_finish: tuple):
+        if self.live is True:
+            self.walk(coords_start, coords_finish)
+            if self.check_hero(hero, walls) is True:
+                self.get_around(walls)
+                self.move_to_hero(hero)
+                if self.hand is True:
+                    self.hero_atack(hero)
+                else:
+                    self.hero_fire(hero)
+
+
+
