@@ -1,7 +1,7 @@
 import pygame
 import math
 
-from Models import Sprite, Simple_Weapon, Projectile_Weapon
+from .Models import *
 
 # Враги
 class SimpleEnemy(Sprite):

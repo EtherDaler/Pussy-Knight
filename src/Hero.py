@@ -1,5 +1,5 @@
 import pygame
-from Models import Sprite, Simple_Weapon, Projectile_Weapon
+from .Models import *
 
 class Knight(Sprite):
 
