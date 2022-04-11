@@ -20,11 +20,12 @@ class Game:
         pygame.mixer.music.set_volume(0.1)
         pygame.mixer.music.play(-1)
         self.avatar = pygame.image.load("assets/sprites/Soldier-Red.png").convert_alpha()
-        self.player = Knight(self.avatar, [settings.WIDTH // 2, settings.HEIGHT // 2], 100, 12, 1, 10, 4, 50, 1, True, True, 0, 10, 10, 5, 0, None)
+        self.player = Knight(self.avatar, [settings.WIDTH // 2, settings.HEIGHT // 2], 100, 12, 1, 10, 3, 50, 1, True, True, 0, 10, 10, 5, 0, None)
         self.walls = []
         self.anim_count = 0
         self.cell_width = MAZE_WIDTH // 28
         self.cell_height = MAZE_HEIGHT // 30
+        self.enemys = [] # Массив с врагами
 
     # Загрузка карты и добавление стен
     def load(self):
@@ -37,11 +38,10 @@ class Game:
                 for xidx, char in enumerate(line):
                     if char == "1":
                         self.walls.append((xidx, yidx))
-        #print(self.walls)
 
     def draw_grid(self):
         for wall in self.walls:
-            pygame.draw.rect(self.background, (112, 55, 163),
+            pygame.draw.rect(self.background, (12, 55, 163),
                              (wall[0] * self.cell_width, wall[1] * self.cell_height, self.cell_width
                               , self.cell_height))
 
@@ -72,6 +72,7 @@ class Game:
             if event.type == pygame.QUIT:
                 self.is_running = False
             if event.type == pygame.KEYDOWN and event.key == pygame.K_SPACE:
+                self.load()
                 self.game_stage = 'playing'
 
     def start_update(self):
@@ -107,6 +108,7 @@ class Game:
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             self.player.move_front(self.walls)
+            self.player.orientation = 0
             self.animate(self.player.draw(3), tuple(self.player.coords))
         if keys[pygame.K_DOWN]:
             self.player.move_back(self.walls)
@@ -129,12 +131,18 @@ class Game:
         if keys[pygame.K_UP] and keys[pygame.K_LEFT]:
             self.player.move_diag('-', '+')
             self.animate(self.player.draw(3), tuple(self.player.coords))
+        if keys[pygame.K_SPACE]:
+            self.animate(self.player.draw(2), tuple(self.player.coords))
+            # Пробегаемся по массиву врагов, чтобы нанести урон одному
+            for enemy in self.enemys:
+                if enemy.get_dist(self.player) <= self.player.weapon.range:
+                    enemy.get_damage(self.player.weapon.damage)
+                    break
         else:
             self.animate(self.player.draw(1), tuple(self.player.coords))
 
     # Игра
     def game(self):
-        self.load()
         self.draw_grid()
         self.playing_events()
         self.playing_update()

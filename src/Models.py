@@ -19,6 +19,14 @@ class Sprite:
     coords = [0, 0] # Позиция
     sheet = None    # Моделька Спрайта
     orientation = 0 # То в какую сторону смотрит спрайт, всего 8 направлений
+    an_or = {0: 4,
+             1: 3,
+             2: 2,
+             3: 1,
+             4: 0,
+             5: 7,
+             6: 6,
+             7: 5} # Фрейм анимации для ориентации
 
     def __init__(self, image: object, coords: list, hp: int, k_hp: int, armor: float, k_armor: int, speed: int, view_range: int,
                  level: int, live: bool, hand: bool, bullets: int, damage: int, k_damage: int, range: int, p_speed: int,
@@ -61,223 +69,28 @@ class Sprite:
 
     # Анимация стоячего спрайта
     def animation_stay(self):
-        if self.orientation == 0:
-            return [self.get_image(0, 4, 32, 32, 2, BLACK),
-                    self.get_image(1, 4, 32, 32, 2, BLACK)]
-        elif self.orientation == 1:
-            return [self.get_image(0, 3, 32, 32, 2, BLACK),
-                    self.get_image(1, 3, 32, 32, 2, BLACK)]
-        elif self.orientation == 2:
-            return [self.get_image(0, 2, 32, 32, 2, BLACK),
-                    self.get_image(1, 2, 32, 32, 2, BLACK)]
-        elif self.orientation == 3:
-            return [self.get_image(0, 1, 32, 32, 2, BLACK),
-                    self.get_image(1, 1, 32, 32, 2, BLACK)]
-        elif self.orientation == 4:
-            return [self.get_image(0, 0, 32, 32, 2, BLACK),
-                    self.get_image(1, 0, 32, 32, 2, BLACK)]
-        elif self.orientation == 5:
-            return [self.get_image(0, 7, 32, 32, 2, BLACK),
-                    self.get_image(1, 7, 32, 32, 2, BLACK)]
-        elif self.orientation == 6:
-            return [self.get_image(0, 6, 32, 32, 2, BLACK),
-                    self.get_image(1, 6, 32, 32, 2, BLACK)]
-        elif self.orientation == 7:
-            return [self.get_image(0, 5, 32, 32, 2, BLACK),
-                    self.get_image(1, 5, 32, 32, 2, BLACK)]
+        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(0, 2)]
 
     # Анимация атаки
     def animation_atack(self):
-        if self.orientation == 0:
-            return [self.get_image(4, 4, 32, 32, 2, BLACK),
-                    self.get_image(5, 4, 32, 32, 2, BLACK),
-                    self.get_image(6, 4, 32, 32, 2, BLACK)]
-        if self.orientation == 1:
-            return [self.get_image(4, 3, 32, 32, 2, BLACK),
-                    self.get_image(5, 3, 32, 32, 2, BLACK),
-                    self.get_image(6, 3, 32, 32, 2, BLACK)]
-        if self.orientation == 2:
-            return [self.get_image(4, 2, 32, 32, 2, BLACK),
-                    self.get_image(5, 2, 32, 32, 2, BLACK),
-                    self.get_image(6, 2, 32, 32, 2, BLACK)]
-        if self.orientation == 3:
-            return [self.get_image(4, 1, 32, 32, 2, BLACK),
-                    self.get_image(5, 1, 32, 32, 2, BLACK),
-                    self.get_image(6, 1, 32, 32, 2, BLACK)]
-        if self.orientation == 4:
-            return [self.get_image(4, 0, 32, 32, 2, BLACK),
-                    self.get_image(5, 0, 32, 32, 2, BLACK),
-                    self.get_image(6, 0, 32, 32, 2, BLACK)]
-        if self.orientation == 5:
-            return [self.get_image(4, 7, 32, 32, 2, BLACK),
-                    self.get_image(5, 7, 32, 32, 2, BLACK),
-                    self.get_image(6, 7, 32, 32, 2, BLACK)]
-        if self.orientation == 6:
-            return [self.get_image(4, 6, 32, 32, 2, BLACK),
-                    self.get_image(5, 6, 32, 32, 2, BLACK),
-                    self.get_image(6, 6, 32, 32, 2, BLACK)]
-        if self.orientation == 7:
-            return [self.get_image(4, 5, 32, 32, 2, BLACK),
-                    self.get_image(5, 5, 32, 32, 2, BLACK),
-                    self.get_image(6, 5, 32, 32, 2, BLACK)]
+        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(4, 7)]
 
         # Анимация ходьбы
     def animation_walk(self):
-        if self.orientation == 0:
-            return [self.get_image(2, 4, 32, 32, 2, BLACK),
-                    self.get_image(3, 4, 32, 32, 2, BLACK)]
-        if self.orientation == 1:
-            return [self.get_image(2, 3, 32, 32, 2, BLACK),
-                    self.get_image(3, 3, 32, 32, 2, BLACK)]
-        if self.orientation == 2:
-            return [self.get_image(2, 2, 32, 32, 2, BLACK),
-                    self.get_image(3, 2, 32, 32, 2, BLACK)]
-        if self.orientation == 3:
-            return [self.get_image(2, 1, 32, 32, 2, BLACK),
-                    self.get_image(3, 1, 32, 32, 2, BLACK)]
-        if self.orientation == 4:
-            return [self.get_image(2, 0, 32, 32, 2, BLACK),
-                    self.get_image(3, 0, 32, 32, 2, BLACK)]
-        if self.orientation == 5:
-            return [self.get_image(2, 7, 32, 32, 2, BLACK),
-                    self.get_image(3, 7, 32, 32, 2, BLACK)]
-        if self.orientation == 6:
-            return [self.get_image(2, 6, 32, 32, 2, BLACK),
-                    self.get_image(3, 6, 32, 32, 2, BLACK)]
-        if self.orientation == 7:
-            return [self.get_image(2, 5, 32, 32, 2, BLACK),
-                    self.get_image(3, 5, 32, 32, 2, BLACK)]
-
+        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(2, 4)]
 
     # Анимация стрельбы
     def animation_fire(self):
-        if self.orientation == 0:
-            return [self.get_image(8, 4, 32, 32, 2, BLACK),
-                    self.get_image(9, 4, 32, 32, 2, BLACK),
-                    self.get_image(10, 4, 32, 32, 2, BLACK),
-                    self.get_image(11, 4, 32, 32, 2, BLACK)]
-        if self.orientation == 1:
-            return [self.get_image(8, 3, 32, 32, 2, BLACK),
-                    self.get_image(9, 3, 32, 32, 2, BLACK),
-                    self.get_image(10, 3, 32, 32, 2, BLACK),
-                    self.get_image(11, 3, 32, 32, 2, BLACK)]
-        if self.orientation == 2:
-            return [self.get_image(8, 2, 32, 32, 2, BLACK),
-                    self.get_image(9, 2, 32, 32, 2, BLACK),
-                    self.get_image(10, 2, 32, 32, 2, BLACK),
-                    self.get_image(11, 2, 32, 32, 2, BLACK)]
-        if self.orientation == 3:
-            return [self.get_image(8, 1, 32, 32, 2, BLACK),
-                    self.get_image(9, 1, 32, 32, 2, BLACK),
-                    self.get_image(10, 1, 32, 32, 2, BLACK),
-                    self.get_image(11, 1, 32, 32, 2, BLACK)]
-        if self.orientation == 4:
-            return [self.get_image(8, 0, 32, 32, 2, BLACK),
-                    self.get_image(9, 0, 32, 32, 2, BLACK),
-                    self.get_image(10, 0, 32, 32, 2, BLACK),
-                    self.get_image(11, 0, 32, 32, 2, BLACK)]
-        if self.orientation == 5:
-            return [self.get_image(8, 7, 32, 32, 2, BLACK),
-                    self.get_image(9, 7, 32, 32, 2, BLACK),
-                    self.get_image(10, 7, 32, 32, 2, BLACK),
-                    self.get_image(11, 7, 32, 32, 2, BLACK)]
-        if self.orientation == 6:
-            return [self.get_image(8, 6, 32, 32, 2, BLACK),
-                    self.get_image(9, 6, 32, 32, 2, BLACK),
-                    self.get_image(10, 6, 32, 32, 2, BLACK),
-                    self.get_image(11, 6, 32, 32, 2, BLACK)]
-        if self.orientation == 7:
-            return [self.get_image(8, 5, 32, 32, 2, BLACK),
-                    self.get_image(9, 5, 32, 32, 2, BLACK),
-                    self.get_image(10, 5, 32, 32, 2, BLACK),
-                    self.get_image(11, 5, 32, 32, 2, BLACK)]
+        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(8, 12)]
 
         # Анимация смерти
 
     def animation_death(self):
-        if self.orientation == 0:
-            return [self.get_image(20, 4, 32, 32, 2, BLACK),
-                    self.get_image(21, 4, 32, 32, 2, BLACK),
-                    self.get_image(22, 4, 32, 32, 2, BLACK),
-                    self.get_image(23, 4, 32, 32, 2, BLACK)]
-        if self.orientation == 1:
-            return [self.get_image(20, 3, 32, 32, 2, BLACK),
-                    self.get_image(21, 3, 32, 32, 2, BLACK),
-                    self.get_image(22, 3, 32, 32, 2, BLACK),
-                    self.get_image(23, 3, 32, 32, 2, BLACK)]
-        if self.orientation == 2:
-            return [self.get_image(20, 2, 32, 32, 2, BLACK),
-                    self.get_image(21, 2, 32, 32, 2, BLACK),
-                    self.get_image(22, 2, 32, 32, 2, BLACK),
-                    self.get_image(23, 2, 32, 32, 2, BLACK)]
-        if self.orientation == 3:
-            return [self.get_image(20, 1, 32, 32, 2, BLACK),
-                    self.get_image(21, 1, 32, 32, 2, BLACK),
-                    self.get_image(22, 1, 32, 32, 2, BLACK),
-                    self.get_image(23, 1, 32, 32, 2, BLACK)]
-        if self.orientation == 4:
-            return [self.get_image(20, 0, 32, 32, 2, BLACK),
-                    self.get_image(21, 0, 32, 32, 2, BLACK),
-                    self.get_image(22, 0, 32, 32, 2, BLACK),
-                    self.get_image(23, 0, 32, 32, 2, BLACK)]
-        if self.orientation == 5:
-            return [self.get_image(20, 7, 32, 32, 2, BLACK),
-                    self.get_image(21, 7, 32, 32, 2, BLACK),
-                    self.get_image(22, 7, 32, 32, 2, BLACK),
-                    self.get_image(23, 7, 32, 32, 2, BLACK)]
-        if self.orientation == 6:
-            return [self.get_image(20, 6, 32, 32, 2, BLACK),
-                    self.get_image(21, 6, 32, 32, 2, BLACK),
-                    self.get_image(22, 6, 32, 32, 2, BLACK),
-                    self.get_image(23, 6, 32, 32, 2, BLACK)]
-        if self.orientation == 7:
-            return [self.get_image(20, 5, 32, 32, 2, BLACK),
-                    self.get_image(21, 5, 32, 32, 2, BLACK),
-                    self.get_image(22, 5, 32, 32, 2, BLACK),
-                    self.get_image(23, 5, 32, 32, 2, BLACK)]
+        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(20, 24)]
 
         # Анимация победы
     def animation_win(self):
-        if self.orientation == 0:
-            return [self.get_image(15, 4, 32, 32, 2, BLACK),
-                    self.get_image(16, 4, 32, 32, 2, BLACK),
-                    self.get_image(17, 4, 32, 32, 2, BLACK),
-                    self.get_image(18, 4, 32, 32, 2, BLACK)]
-        if self.orientation == 1:
-            return [self.get_image(15, 3, 32, 32, 2, BLACK),
-                    self.get_image(16, 3, 32, 32, 2, BLACK),
-                    self.get_image(17, 3, 32, 32, 2, BLACK),
-                    self.get_image(18, 3, 32, 32, 2, BLACK)]
-        if self.orientation == 2:
-            return [self.get_image(15, 2, 32, 32, 2, BLACK),
-                    self.get_image(16, 2, 32, 32, 2, BLACK),
-                    self.get_image(17, 2, 32, 32, 2, BLACK),
-                    self.get_image(18, 2, 32, 32, 2, BLACK)]
-        if self.orientation == 3:
-            return [self.get_image(15, 1, 32, 32, 2, BLACK),
-                    self.get_image(16, 1, 32, 32, 2, BLACK),
-                    self.get_image(17, 1, 32, 32, 2, BLACK),
-                    self.get_image(18, 1, 32, 32, 2, BLACK)]
-        if self.orientation == 4:
-            return [self.get_image(15, 0, 32, 32, 2, BLACK),
-                    self.get_image(16, 0, 32, 32, 2, BLACK),
-                    self.get_image(17, 0, 32, 32, 2, BLACK),
-                    self.get_image(18, 0, 32, 32, 2, BLACK)]
-        if self.orientation == 5:
-            return [self.get_image(15, 7, 32, 32, 2, BLACK),
-                    self.get_image(16, 7, 32, 32, 2, BLACK),
-                    self.get_image(17, 7, 32, 32, 2, BLACK),
-                    self.get_image(18, 7, 32, 32, 2, BLACK)]
-        if self.orientation == 6:
-            return [self.get_image(15, 6, 32, 32, 2, BLACK),
-                    self.get_image(16, 6, 32, 32, 2, BLACK),
-                    self.get_image(17, 6, 32, 32, 2, BLACK),
-                    self.get_image(18, 6, 32, 32, 2, BLACK)]
-        if self.orientation == 7:
-            return [self.get_image(15, 5, 32, 32, 2, BLACK),
-                    self.get_image(16, 5, 32, 32, 2, BLACK),
-                    self.get_image(17, 5, 32, 32, 2, BLACK),
-                    self.get_image(18, 5, 32, 32, 2, BLACK)]
+        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(15, 19)]
     """
     Методы отвечающие за движение
     """
@@ -290,10 +103,12 @@ class Sprite:
 
     def move_front(self, walls: list):
         can_walk = True
+        cell_width = MAZE_WIDTH // 28
+        cell_height = MAZE_HEIGHT // 30
         for wall in walls:
-            if (self.coords[0], self.coords[1] - self.speed) == wall:
+            if (self.coords[0] // cell_width, (self.coords[1] - self.speed) // cell_height) == wall:
                 can_walk = False
-        if can_walk is True:
+        if can_walk:
             self.coords[1] -= self.speed
         self.orientation = 0
         if self.hand is False:
@@ -301,10 +116,12 @@ class Sprite:
 
     def move_back(self, walls: list):
         can_walk = True
+        cell_width = MAZE_WIDTH // 28
+        cell_height = MAZE_HEIGHT // 30
         for wall in walls:
-            if (self.coords[0], self.coords[1] + self.speed) == wall:
+            if (self.coords[0] // cell_width, (self.coords[1] + self.speed) // cell_height) == wall:
                 can_walk = False
-        if can_walk is True:
+        if can_walk:
             self.coords[1] += self.speed
         self.orientation = 4
         if self.hand is False:
@@ -312,8 +129,10 @@ class Sprite:
 
     def move_right(self, walls: list):
         can_walk = True
+        cell_width = MAZE_WIDTH // 28
+        cell_height = MAZE_HEIGHT // 30
         for wall in walls:
-            if (self.coords[0] + self.speed, self.coords[1]) == wall:
+            if ((self.coords[0] + self.speed) // cell_width, self.coords[1] // cell_height) == wall:
                 can_walk = False
         if can_walk is True:
             self.coords[0] += self.speed
@@ -323,8 +142,10 @@ class Sprite:
 
     def move_left(self, walls: list):
         can_walk = True
+        cell_width = MAZE_WIDTH // 28
+        cell_height = MAZE_HEIGHT // 30
         for wall in walls:
-            if (self.coords[0] - self.speed, self.coords[1]) == wall:
+            if ((self.coords[0] - self.speed) // cell_width, self.coords[1] // cell_height) == wall:
                 can_walk = False
         if can_walk is True:
             self.coords[0] -= self.speed
