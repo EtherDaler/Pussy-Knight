@@ -7,30 +7,48 @@ from . import settings
 from .Hero import *
 from .Enemy import *
 
+
 class Game:
     def __init__(self):
-        self.screen = pygame.display.set_mode((settings.WIDTH, settings.HEIGHT))
+        self.screen = pygame.display.set_mode(
+            (settings.WIDTH, settings.HEIGHT))
         self.is_running = True
         self.clock = pygame.time.Clock()
         self.game_stage = "main menu"
         pygame.display.set_caption("Pussy Knight")
         pygame.display.set_icon(pygame.image.load("assets/images/icon.bmp"))
-        self.background = pygame.image.load("assets/images/background_live.gif")
-        pygame.mixer.music.load("assets/music/LofiFruits-Gangsta'sParadise.wav")
+        self.background = pygame.image.load(
+            "assets/images/background_live.gif")
+        pygame.mixer.music.load(
+            "assets/music/LofiFruits-Gangsta'sParadise.wav")
         pygame.mixer.music.set_volume(0.1)
         pygame.mixer.music.play(-1)
-        self.avatar = pygame.image.load("assets/sprites/Soldier-Red.png").convert_alpha()
-        self.player = Knight(self.avatar, [settings.WIDTH // 2, settings.HEIGHT // 2], 100, 12, 1, 10, 3, 50, 1, True, True, 0, 10, 10, 5, 0, None)
+        self.avatar = pygame.image.load(
+            "assets/sprites/Soldier-Red.png").convert_alpha()
+        self.player = Knight(self.avatar, [settings.WIDTH // 2, settings.HEIGHT // 2],
+                             100, 12, 1, 10, 2, 50, 1, True, True, 0, 10, 10, 10, 20, None)
+        self.simple_mob_avat = pygame.image.load(
+            "assets/sprites/Soldier-Yellow.png").convert_alpha()
         self.walls = []
         self.anim_count = 0
         self.cell_width = MAZE_WIDTH // 28
         self.cell_height = MAZE_HEIGHT // 30
-        self.enemys = [] # Массив с врагами
+        self.enemies = []  # Массив с врагами
+        with open("assets/enemies/enemies.txt", 'r') as f:
+            for y, line in enumerate(f):
+                for x, enemy in enumerate(line):
+                    if enemy == '*':
+                        e = SimpleEnemy(self.simple_mob_avat, [x * self.cell_width, y * self.cell_height], 50, 12, 0, 1,
+                                        1, 150, 0, True, True, 0, 10, 10, 10, 20, None)
+                        e.p_start = (x * self.cell_width, y * self.cell_height)
+                        e.p_finish = (x * self.cell_width + 30, y * self.cell_height + 30)
+                        self.enemies.append(e)
 
     # Загрузка карты и добавление стен
     def load(self):
         self.background = pygame.image.load('assets/maps/pixil-frame-0.png')
-        self.background = pygame.transform.scale(self.background, (settings.MAZE_WIDTH, settings.MAZE_HEIGHT))
+        self.background = pygame.transform.scale(
+            self.background, (settings.MAZE_WIDTH, settings.MAZE_HEIGHT))
         # Opening walls file
         # Creat walls list with co-ords of walls
         with open("assets/walls/walls.txt", 'r') as file:
@@ -42,8 +60,7 @@ class Game:
     def draw_grid(self):
         for wall in self.walls:
             pygame.draw.rect(self.background, (12, 55, 163),
-                             (wall[0] * self.cell_width, wall[1] * self.cell_height, self.cell_width
-                              , self.cell_height))
+                             (wall[0] * self.cell_width, wall[1] * self.cell_height, self.cell_width, self.cell_height))
 
     # Рисуем текст
     def draw_text(self, words, screen, pos, size, colour, font_name, centered=False):
@@ -88,7 +105,8 @@ class Game:
     def animate(self, args, coords):
         if self.anim_count + 1 >= settings.FPS:
             self.anim_count = 0
-        self.screen.blit(args[self.anim_count // (settings.FPS // len(args))], coords)
+        self.screen.blit(
+            args[self.anim_count // (settings.FPS // len(args))], coords)
         self.anim_count += 1
 
     # Действия в игре
@@ -103,9 +121,19 @@ class Game:
     # Отрисовка Игры
     def playing_draw(self):
         self.screen.fill(settings.BLACK)
-        self.screen.blit(self.background, (settings.TOP_BOTTOM_BUFFER // 2, settings.TOP_BOTTOM_BUFFER // 2))
-        self.draw_text(f'KILL: {self.player.kills}', self.screen, [10, 0], 18, settings.WHITE, settings.START_FONT)
+        self.screen.blit(
+            self.background, (settings.TOP_BOTTOM_BUFFER // 2, settings.TOP_BOTTOM_BUFFER // 2))
+        self.draw_text(f'KILL: {self.player.kills}', self.screen, [
+                       10, 0], 18, settings.WHITE, settings.START_FONT)
         keys = pygame.key.get_pressed()
+        if not self.player.live:
+            self.is_running = False
+        for enemy in self.enemies:
+            self.animate(enemy.draw(enemy.state), tuple(enemy.coords))
+            enemy.enemy_active(self.player, self.walls,
+                               enemy.p_start, enemy.p_finish)
+            if enemy.live is False:
+                del self.enemies[self.enemies.index(enemy)]
         if keys[pygame.K_UP]:
             self.player.move_front(self.walls)
             self.player.orientation = 0
@@ -134,10 +162,14 @@ class Game:
         if keys[pygame.K_SPACE]:
             self.animate(self.player.draw(2), tuple(self.player.coords))
             # Пробегаемся по массиву врагов, чтобы нанести урон одному
-            for enemy in self.enemys:
-                if enemy.get_dist(self.player) <= self.player.weapon.range:
-                    enemy.get_damage(self.player.weapon.damage)
-                    break
+            if self.player.sleep:
+                self.player.sleep -= 1
+            else:
+                for enemy in self.enemies:
+                    if enemy.get_dist(self.player) <= self.player.weapon.range:
+                        enemy.get_damage(self.player.weapon.damage)
+                        self.player.sleep = self.player.p_speed
+                        break
         else:
             self.animate(self.player.draw(1), tuple(self.player.coords))
 

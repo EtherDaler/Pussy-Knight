@@ -1,8 +1,8 @@
 import pygame
 from .Models import *
 
-class Knight(Sprite):
 
+class Knight(Sprite):
     # Повышение уровня
     def level_up(self):
         self.level += 1

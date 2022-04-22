@@ -19,6 +19,7 @@ class Sprite:
     coords = [0, 0] # Позиция
     sheet = None    # Моделька Спрайта
     orientation = 0 # То в какую сторону смотрит спрайт, всего 8 направлений
+    p_speed = 0
     an_or = {0: 4,
              1: 3,
              2: 2,
@@ -42,6 +43,8 @@ class Sprite:
         self.hand = hand
         self.bullets = bullets
         self.xp_need = level * 200
+        self.p_speed = p_speed
+        self.sleep = 0
         # Выбор оружия в зависимости от типа боя
         if hand is True:
             self.weapon = Simple_Weapon(damage + (damage * level // k_damage), range)
@@ -195,6 +198,8 @@ class Sprite:
 
     # Стрельба
     def fire(self, goal: list, walls: list):
+        cell_width = MAZE_WIDTH // 28
+        cell_height = MAZE_HEIGHT // 30
         self.animation_fire()
         """
         :param goal: Для героя передается список всех врагов на карте
@@ -224,7 +229,7 @@ class Sprite:
 
         # Проверка на попадание в стену
         for wall in walls:
-            if self.weapon[-1].coords == wall:
+            if (self.weapon[-1].coords[0] // cell_width, self.weapon[-1].coords[1] // cell_height) == wall:
                 d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
                 self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
                                                      self.coords, self.orientation, d.image, False))
