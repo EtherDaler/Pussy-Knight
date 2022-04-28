@@ -19,3 +19,5 @@ START_FONT = 'arial black'
 # player setting
 PLAYER_START_POS = vec(WIDTH // 2, HEIGHT // 2)
 # mob setting
+
+PX = 32

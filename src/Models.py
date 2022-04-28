@@ -1,6 +1,8 @@
 import pygame
-from .settings import *
+
+from . import settings
 from pygame.math import Vector2 as vec
+
 
 # Родительский Класс для всех Спрайтов
 class Sprite:
@@ -72,28 +74,28 @@ class Sprite:
 
     # Анимация стоячего спрайта
     def animation_stay(self):
-        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(0, 2)]
+        return [self.get_image(i, self.an_or[self.orientation], settings.PX, settings.PX, 2, settings.BLACK) for i in range(0, 2)]
 
     # Анимация атаки
     def animation_atack(self):
-        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(4, 7)]
+        return [self.get_image(i, self.an_or[self.orientation], settings.PX, settings.PX, 2, settings.BLACK) for i in range(4, 7)]
 
-        # Анимация ходьбы
+    # Анимация ходьбы
     def animation_walk(self):
-        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(2, 4)]
+        return [self.get_image(i, self.an_or[self.orientation], settings.PX, settings.PX, 2, settings.BLACK) for i in range(2, 4)]
 
     # Анимация стрельбы
     def animation_fire(self):
-        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(8, 12)]
+        return [self.get_image(i, self.an_or[self.orientation], settings.PX, settings.PX, 2, settings.BLACK) for i in range(8, 12)]
 
         # Анимация смерти
 
     def animation_death(self):
-        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(20, 24)]
+        return [self.get_image(i, self.an_or[self.orientation], settings.PX, settings.PX, 2, settings.BLACK) for i in range(20, 24)]
 
         # Анимация победы
     def animation_win(self):
-        return [self.get_image(i, self.an_or[self.orientation], 32, 32, 2, BLACK) for i in range(15, 19)]
+        return [self.get_image(i, self.an_or[self.orientation], settings.PX, settings.PX, 2, settings.BLACK) for i in range(15, 19)]
     """
     Методы отвечающие за движение
     """
@@ -106,8 +108,8 @@ class Sprite:
 
     def move_front(self, walls: list):
         can_walk = True
-        cell_width = MAZE_WIDTH // 28
-        cell_height = MAZE_HEIGHT // 30
+        cell_width = settings.MAZE_WIDTH // 28
+        cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
             if (self.coords[0] // cell_width, (self.coords[1] - self.speed) // cell_height) == wall:
                 can_walk = False
@@ -119,8 +121,8 @@ class Sprite:
 
     def move_back(self, walls: list):
         can_walk = True
-        cell_width = MAZE_WIDTH // 28
-        cell_height = MAZE_HEIGHT // 30
+        cell_width = settings.MAZE_WIDTH // 28
+        cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
             if (self.coords[0] // cell_width, (self.coords[1] + self.speed) // cell_height) == wall:
                 can_walk = False
@@ -132,8 +134,8 @@ class Sprite:
 
     def move_right(self, walls: list):
         can_walk = True
-        cell_width = MAZE_WIDTH // 28
-        cell_height = MAZE_HEIGHT // 30
+        cell_width = settings.MAZE_WIDTH // 28
+        cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
             if ((self.coords[0] + self.speed) // cell_width, self.coords[1] // cell_height) == wall:
                 can_walk = False
@@ -145,8 +147,8 @@ class Sprite:
 
     def move_left(self, walls: list):
         can_walk = True
-        cell_width = MAZE_WIDTH // 28
-        cell_height = MAZE_HEIGHT // 30
+        cell_width = settings.MAZE_WIDTH // 28
+        cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
             if ((self.coords[0] - self.speed) // cell_width, self.coords[1] // cell_height) == wall:
                 can_walk = False
@@ -198,8 +200,8 @@ class Sprite:
 
     # Стрельба
     def fire(self, goal: list, walls: list):
-        cell_width = MAZE_WIDTH // 28
-        cell_height = MAZE_HEIGHT // 30
+        cell_width = settings.MAZE_WIDTH // 28
+        cell_height = settings.MAZE_HEIGHT // 30
         self.animation_fire()
         """
         :param goal: Для героя передается список всех врагов на карте
@@ -209,13 +211,13 @@ class Sprite:
         self.weapon[-1].on_fly = True
 
         # Проверка не попал ли снаряд на край экрана
-        if self.weapon[-1].coords[0] >= 520 or self.weapon[-1].coords[0] <= 0:
+        if self.weapon[-1].coords[0] >= settings.WIDTH or self.weapon[-1].coords[0] <= 0:
             d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
             self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
                                                      self.coords, self.orientation, d.image, False))
 
         # Проверка не попал ли снаряд на край экрана
-        if self.weapon[-1].coords[1] >= 800 or self.weapon[-1].coords[1] <= 0:
+        if self.weapon[-1].coords[1] >= settings.HEIGHT or self.weapon[-1].coords[1] <= 0:
             d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
             self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
                                                      self.coords, self.orientation, d.image, False))

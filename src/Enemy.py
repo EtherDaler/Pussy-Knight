@@ -1,7 +1,8 @@
 import pygame
 import math
 
-from .Models import *
+from .Models import Sprite, Simple_Weapon, Projectile_Weapon
+from . import settings
 
 
 # Враги
@@ -36,8 +37,8 @@ class SimpleEnemy(Sprite):
     # Сеачала проверяем через уравнение прямой, что точки на одной прямой
     # Потом через скалярное произведение проверяем лежит ли C на отрезке [A B]
     def check_line(self, A, B, C):
-        cell_width = MAZE_WIDTH // 28
-        cell_height = MAZE_HEIGHT // 30
+        cell_width = settings.MAZE_WIDTH // 28
+        cell_height = settings.MAZE_HEIGHT // 30
         A1 = [A[0] // cell_width, A[1] // cell_height]
         B1 = [B[0] // cell_width, B[1] // cell_height]
         on_line = (C[0] - A1[0]) * (B1[1] - A1[1]) - (B1[0] - A1[0]) * (C[1] - A1[1])
