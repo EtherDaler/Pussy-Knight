@@ -1,8 +1,9 @@
 import pygame
-from .Models import *
+
+from .Models import Sprite, Simple_Weapon, Projectile_Weapon
+
 
 class Knight(Sprite):
-
     # Повышение уровня
     def level_up(self):
         self.level += 1
