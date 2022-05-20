@@ -2,6 +2,7 @@
 Здесь все собирается в единое целое!!!
 """
 import pygame
+import time
 
 from . import settings
 from pygame.math import Vector2 as vec
@@ -27,7 +28,7 @@ class Game:
         self.avatar = pygame.image.load(
             "assets/sprites/Soldier-Red.png").convert_alpha()
         self.player = Knight(self.avatar, [settings.WIDTH // 2, settings.HEIGHT // 2],
-                             100, 12, 1, 10, 2, 50, 1, True, True, 0, 10, 10, 10, 20, None)
+                             100, 12, 1, 10, 2, 50, 1, True, True, 0, 10, 10, 20, 20, None)
         self.simple_mob_avat = pygame.image.load(
             "assets/sprites/Soldier-Yellow.png").convert_alpha()
         self.walls = []
@@ -40,7 +41,7 @@ class Game:
                 for x, enemy in enumerate(line):
                     if enemy == '*':
                         e = SimpleEnemy(self.simple_mob_avat, [x * self.cell_width, y * self.cell_height], 50, 12, 0, 1,
-                                        1, 150, 0, True, True, 0, 10, 10, 10, 20, None)
+                                        1, 150, 0, True, True, 0, 10, 10, 20, 20, None)
                         e.p_start = (x * self.cell_width, y * self.cell_height)
                         e.p_finish = (x * self.cell_width + 30, y * self.cell_height + 30)
                         self.enemies.append(e)
@@ -128,12 +129,15 @@ class Game:
                        10, 0], 18, settings.WHITE, settings.START_FONT)
         keys = pygame.key.get_pressed()
         if not self.player.live:
+            self.animate(self.player.draw(5), self.player.coords)
+            time.sleep(0.25)
             self.is_running = False
         for enemy in self.enemies:
-            self.animate(enemy.draw(enemy.state), tuple(enemy.coords))
             enemy.enemy_active(self.player, self.walls,
                                enemy.p_start, enemy.p_finish)
+            self.animate(enemy.draw(enemy.state), tuple(enemy.coords))
             if enemy.live is False:
+                self.animate(enemy.draw(5), tuple(enemy.coords))
                 del self.enemies[self.enemies.index(enemy)]
         if keys[pygame.K_UP]:
             self.player.move_front(self.walls)

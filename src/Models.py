@@ -30,6 +30,7 @@ class Sprite:
              5: 7,
              6: 6,
              7: 5} # Фрейм анимации для ориентации
+    stanned = False # Состояние оглушения
 
     def __init__(self, image: object, coords: list, hp: int, k_hp: int, armor: float, k_armor: int, speed: int, view_range: int,
                  level: int, live: bool, hand: bool, bullets: int, damage: int, k_damage: int, range: int, p_speed: int,
@@ -108,10 +109,12 @@ class Sprite:
 
     def move_front(self, walls: list):
         can_walk = True
+        if self.stanned == True:
+            can_wlk = False
         cell_width = settings.MAZE_WIDTH // 28
         cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
-            if (self.coords[0] // cell_width, (self.coords[1] - self.speed) // cell_height) == wall:
+            if (self.coords[0] // cell_width, (self.coords[1] - self.speed - 1) // cell_height) == wall:
                 can_walk = False
         if can_walk:
             self.coords[1] -= self.speed
@@ -121,10 +124,12 @@ class Sprite:
 
     def move_back(self, walls: list):
         can_walk = True
+        if self.stanned == True:
+            can_wlk = False
         cell_width = settings.MAZE_WIDTH // 28
         cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
-            if (self.coords[0] // cell_width, (self.coords[1] + self.speed) // cell_height) == wall:
+            if (self.coords[0] // cell_width, (self.coords[1] + self.speed + 1) // cell_height) == wall:
                 can_walk = False
         if can_walk:
             self.coords[1] += self.speed
@@ -134,10 +139,12 @@ class Sprite:
 
     def move_right(self, walls: list):
         can_walk = True
+        if self.stanned == True:
+            can_wlk = False
         cell_width = settings.MAZE_WIDTH // 28
         cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
-            if ((self.coords[0] + self.speed) // cell_width, self.coords[1] // cell_height) == wall:
+            if ((self.coords[0] + self.speed + 1) // cell_width, self.coords[1] // cell_height) == wall:
                 can_walk = False
         if can_walk is True:
             self.coords[0] += self.speed
@@ -147,10 +154,12 @@ class Sprite:
 
     def move_left(self, walls: list):
         can_walk = True
+        if self.stanned == True:
+            can_wlk = False
         cell_width = settings.MAZE_WIDTH // 28
         cell_height = settings.MAZE_HEIGHT // 30
         for wall in walls:
-            if ((self.coords[0] - self.speed) // cell_width, self.coords[1] // cell_height) == wall:
+            if ((self.coords[0] - self.speed - 1) // cell_width, self.coords[1] // cell_height) == wall:
                 can_walk = False
         if can_walk is True:
             self.coords[0] -= self.speed
@@ -184,7 +193,7 @@ class Sprite:
     """
     # Получение урона
     def get_damage(self, damage: int):
-        self.hp -= damage
+        self.hp -= damage - (self.armor / 10)
         if self.hp <= 0:
             self.hp = 0
             self.animation_death()
@@ -194,77 +203,85 @@ class Sprite:
 
     # Атака в ближнем бою
     def attack(self, goal: object):
-        self.animation_atack()
-        if goal is not None:
-            self.kills += goal.get_damage(self.weapon.damage)
+        can_atack = True
+        if self.stanned == True:
+            can_atack = False
+        if can_atack:
+            self.animation_atack()
+            if goal is not None:
+                self.kills += goal.get_damage(self.weapon.damage)
 
     # Стрельба
     def fire(self, goal: list, walls: list):
         cell_width = settings.MAZE_WIDTH // 28
         cell_height = settings.MAZE_HEIGHT // 30
-        self.animation_fire()
-        """
-        :param goal: Для героя передается список всех врагов на карте
-                     Для врагов передается список из одного элемента - героя
-        :param walls: Передается список с координатами всех стен
-        """
-        self.weapon[-1].on_fly = True
+        can_atack = True
+        if self.stanned == True:
+            can_atack = False
+        if can_atack:
+            self.animation_fire()
+            """
+            :param goal: Для героя передается список всех врагов на карте
+                         Для врагов передается список из одного элемента - героя
+            :param walls: Передается список с координатами всех стен
+            """
+            self.weapon[-1].on_fly = True
 
-        # Проверка не попал ли снаряд на край экрана
-        if self.weapon[-1].coords[0] >= settings.WIDTH or self.weapon[-1].coords[0] <= 0:
-            d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
-            self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
-                                                     self.coords, self.orientation, d.image, False))
+            # Проверка не попал ли снаряд на край экрана
+            if self.weapon[-1].coords[0] >= settings.WIDTH or self.weapon[-1].coords[0] <= 0:
+                d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
+                self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
+                                                         self.coords, self.orientation, d.image, False))
 
-        # Проверка не попал ли снаряд на край экрана
-        if self.weapon[-1].coords[1] >= settings.HEIGHT or self.weapon[-1].coords[1] <= 0:
-            d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
-            self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
-                                                     self.coords, self.orientation, d.image, False))
+            # Проверка не попал ли снаряд на край экрана
+            if self.weapon[-1].coords[1] >= settings.HEIGHT or self.weapon[-1].coords[1] <= 0:
+                d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
+                self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
+                                                         self.coords, self.orientation, d.image, False))
 
-        # Проверка на дальность полета
-        if self.weapon[-1].coords[0] >= self.weapon[-1].f_coords[0] + self.weapon[-1].range or \
-                self.weapon[-1].coords[1] >= self.weapon[-1].f_coords[1] + self.weapon[-1].range:
-            d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
-            self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
-                                                 self.coords, self.orientation, d.image, False))
-
-        # Проверка на попадание в стену
-        for wall in walls:
-            if (self.weapon[-1].coords[0] // cell_width, self.weapon[-1].coords[1] // cell_height) == wall:
+            # Проверка на дальность полета
+            if self.weapon[-1].coords[0] >= self.weapon[-1].f_coords[0] + self.weapon[-1].range or \
+                    self.weapon[-1].coords[1] >= self.weapon[-1].f_coords[1] + self.weapon[-1].range:
                 d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
                 self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
                                                      self.coords, self.orientation, d.image, False))
 
-        # Проверка на попадание в спрайта
-        for sprite in goal:
-            if self.weapon[-1].coords == sprite.coords:
-                sprite.get_damage(self.weapon[-1].damage)
-                d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
-                self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
-                                                     self.coords, self.orientation, d.image, False))
+            # Проверка на попадание в стену
+            for wall in walls:
+                if (self.weapon[-1].coords[0] // cell_width, self.weapon[-1].coords[1] // cell_height) == wall:
+                    d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
+                    self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
+                                                         self.coords, self.orientation, d.image, False))
 
-        # Полет снаряда
-        if self.weapon[-1].orientation == 0:
-            self.weapon[-1].coords[1] += self.weapon[-1].speed
-        elif self.weapon[-1].orientation == 1:
-            self.weapon[-1].coords[0] += self.weapon[-1].speed
-            self.weapon[-1].coords[1] += self.weapon[-1].speed
-        elif self.weapon[-1].orientation == 2:
-            self.weapon[-1].coords[0] += self.weapon[-1].speed
-        elif self.weapon[-1].orientation == 3:
-            self.weapon[-1].coords[0] += self.weapon[-1].speed
-            self.weapon[-1].coords[1] -= self.weapon[-1].speed
-        elif self.weapon[-1].orientation == 4:
-            self.weapon[-1].coords[1] -= self.weapon[-1].speed
-        elif self.weapon[-1].orientation == 5:
-            self.weapon[-1].coords[0] -= self.weapon[-1].speed
-            self.weapon[-1].coords[1] -= self.weapon[-1].speed
-        elif self.weapon[-1].orientation == 6:
-            self.weapon[-1].coords[0] -= self.weapon[-1].speed
-        elif self.weapon[-1].orientation == 7:
-            self.weapon[-1].coords[0] -= self.weapon[-1].speed
-            self.weapon[-1].coords[1] += self.weapon[-1].speed
+            # Проверка на попадание в спрайта
+            for sprite in goal:
+                if self.weapon[-1].coords == sprite.coords:
+                    sprite.get_damage(self.weapon[-1].damage)
+                    d = self.weapon.pop(self.weapon.index(self.weapon[-1]))
+                    self.weapon.append(Projectile_Weapon(d.range, d.speed, d.damage,
+                                                         self.coords, self.orientation, d.image, False))
+
+            # Полет снаряда
+            if self.weapon[-1].orientation == 0:
+                self.weapon[-1].coords[1] += self.weapon[-1].speed
+            elif self.weapon[-1].orientation == 1:
+                self.weapon[-1].coords[0] += self.weapon[-1].speed
+                self.weapon[-1].coords[1] += self.weapon[-1].speed
+            elif self.weapon[-1].orientation == 2:
+                self.weapon[-1].coords[0] += self.weapon[-1].speed
+            elif self.weapon[-1].orientation == 3:
+                self.weapon[-1].coords[0] += self.weapon[-1].speed
+                self.weapon[-1].coords[1] -= self.weapon[-1].speed
+            elif self.weapon[-1].orientation == 4:
+                self.weapon[-1].coords[1] -= self.weapon[-1].speed
+            elif self.weapon[-1].orientation == 5:
+                self.weapon[-1].coords[0] -= self.weapon[-1].speed
+                self.weapon[-1].coords[1] -= self.weapon[-1].speed
+            elif self.weapon[-1].orientation == 6:
+                self.weapon[-1].coords[0] -= self.weapon[-1].speed
+            elif self.weapon[-1].orientation == 7:
+                self.weapon[-1].coords[0] -= self.weapon[-1].speed
+                self.weapon[-1].coords[1] += self.weapon[-1].speed
 
     def draw(self, animation: int):
         if animation == 1:
@@ -300,3 +317,6 @@ class Projectile_Weapon:
         self.orientation = orientation  # Ориентация в пространстве
         self.image = image              # Изображение снаряда
         self.on_fly = on_fly            # Снаряд выпущен
+
+    def fire(self):
+        pass
