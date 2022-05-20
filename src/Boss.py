@@ -14,8 +14,6 @@ class Boss_skills:
         if len(skills_list) > 4:
             for i in range(5, len(skills_list)):
                 del skills_list[i]
-        if abs(ult) > 3:
-            ult = 3
         self.skills_list = skills_list
         self.ult = ult
 
@@ -183,10 +181,12 @@ class Boss_fases:
         self.fas2 = fas2
 
     def fas1_0(self):
-        pass
+        self.boss.weapon.damage += 5
+        self.boss.speed += 2
 
     def fas1_1(self):
-        pass
+        self.boss.armor += 2
+        self.boss.weapon.damage += 2
 
     def fas1_2(self):
         pass
@@ -224,18 +224,33 @@ class Boss(SimpleEnemy):
     # Фаза 1 при битве с боссом
     def activate_fas1(self):
         if self.hp * 100 / self.max_hp <= 50:
-            pass
+            self.fases.fas1_0()
 
     # Фаза 2 при битве с боссом
     def activate_fas2(self):
         if self.hp * 100 / self.max_hp <= 30:
-            pass
-        
-    def use_skill(self):
-        pass
-    
-    def use_ult(self):
-        pass
+            self.fases.fas1_1()
+
+    @mult_threading
+    def use_skill(self, skill: str, kd: int, **kwargs):
+        time.sleep(kd)
+        s = ""
+        for i, j in kwrgs.items():
+            s += f'{i}={j}'
+        exec(f'self.skills.{skill}({s})')
+
+
+    def use_skill(self, kd: list, **kwargs):
+        for i, skill in enumirate(self.skills.skills_list):
+            use_skill(skill, kd[i], kwargs[skill])
+
+    @mult_threading
+    def use_ult(self, kd: int, **kwargs):
+        time.sleep(kd)
+        s = ""
+        for i, j in kwrgs.items():
+            s += f'{i}={j}'
+        exec(f'self.skills.{self.skills.ult}({s})')
     
     def active(self):
         super().enemy_active(hero, walls, self.coords, self.coords + [20, 20])

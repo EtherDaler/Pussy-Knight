@@ -317,6 +317,3 @@ class Projectile_Weapon:
         self.orientation = orientation  # Ориентация в пространстве
         self.image = image              # Изображение снаряда
         self.on_fly = on_fly            # Снаряд выпущен
-
-    def fire(self):
-        pass
