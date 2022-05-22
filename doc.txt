@@ -1,0 +1,90 @@
+Гайд по основным файлам:
+    В src/Models.py прописаны основыне классы, от которых наследуются остальные
+    В src/Enemy.py прописаны классы вражеских NPC
+    В src/Hero.py прописан класс персонажа
+    src/settings.py - файл настроек, в нем указаны все глобальные переменные
+    src/Game.py - отвечает за процесс игры
+
+Гайд по классам:
+src.Models.Sprite - класс отвечающий за всех спрайтов в игре, за их основные функции и поля
+
+    Sprite.get_image(frame_x: int, frame_y: int, width: int, height: int, scale: int, colour: tuple) - Функция получает
+        на вход фотографию с анимации, и получает нужный фрейм для анимирования
+        frame_x - номер фрейма по Ox
+        frame_y - номер фрейма по Oy
+        width, height - размер фрейма в ширину и высоту
+
+    Методы, отвечающие за анимацию:
+        Sprite.animation_stay - стоячая анимация
+        Sprite.animation_atack - анимация атаки
+        Sprite.animation_walk - анимация ходьбы
+        Sprite.animation_fire - анимация стрельбы
+        Sprite.animation_death - анимация смерти
+        Sprite.animation_win - анимация победы
+
+    Методы, отвечающие за движение:
+        все функции кроме move_diag принимают в качестве аргумента walls (массив со стенами), это нужно,
+        чтобы спрайт не проходил сквозь стены
+
+        Sprite.move_bullets - движение пуль
+        Sprite.move_front - движение вперед
+        Sprite.move_back - движение назад
+        Sprite.move_right - движение вправо
+        Sprite.move_left - движение влево
+        Sprite.move_diag(x: str, y: str) - движение по диагонали
+            x - принимает значения +-
+            y - принимает значение +-
+            функция принимает +- по каждой из оси, чтобы знать в сторону какого диагонального направления
+            нужно ориентироваться
+
+    Методы, отвечающие за атаку и получение урона:
+        Sprite.get_damage(self, damage: int) - получение урона
+            damage - сколько урона нанесено спрайту
+        Sprite.attack(self, goal: object) - атаковать цель
+            goal - объект класса Sprite или другого класса, наследованного от класса Sprite
+        Sprite.fire(self, goal: list, walls: list) - стрельба
+            goal - объект класса Sprite или другого класса, наследованного от класса Sprite
+            walls - массив со стенами, чтобы снаряд не пролетал сквозь стены
+
+    Sprite.draw(self, animation: int) - отрисовка анимаций
+        animation - номер анимации, которую нужно отрисовать
+
+
+src.Models.Simple_Weapon - Класс для оружий ближнего боя
+
+src.Models.Projectile_Weapon - Класс для оружий дальнего боя
+
+src.Hero.Knight(Sprite) - Класс, отвечающий за главного героя
+    Knight.level_up - повышения уровня героя
+    Knight.level_down - понижение уровня героя
+    Knight.get_level - возвращает текущий уровень героя
+    Knight.add_xp(score: int) - получение опыта
+        score - количество единиц опыта
+    Knight.delta_xp - вернет количество опыта, которое игроку нужно получить для перехода на следущий уровень
+    Knight.kill() - увеличивает счетчик убийств на 1
+
+src.Enemy.SimpleEnemy(Sprite) - Класс, отвечающий за вражеских NPC
+    SimpleEnemy.find_path(self, point: list, walls: list) - обнаружение пути до нужной точки
+        point - координаты пункта назначения
+        walls - стены
+    SimpleEnemy.get_dist(hero: object) - подсчет расстояния до врага
+        hero - объект, герой
+    SimpleEnemy.check_line(self, A, B, C) - функция проверяет лежит ли точка C на отрезке AB
+    SimpleEnemy.check_hero(self, hero: object, walls: list) - проверка, видит ли NPC игрока
+    SimpleEnemy.move_to_hero(self, hero: object, walls: list) - двигаться в сторогу игрока
+    SimpleEnemy.hero_atack(hero: object) - атаковать героя
+    SimpleEnemy.hero_fire(hero: object) - стрельба по герою
+    SimpleEnemy.walk(self, walls: list, coords_start: tuple, coords_finish: tuple) - NPC бродит в указаном радиусе
+        coords_start - координаты точки, с которой NPC начинает бродить
+        coords_finish - координаты точки, до которой NPC бродит
+    SimpleEnemy.enemy_active(self, hero: object, walls: list, coords_start: tuple, coords_finish: tuple) - активация NPC
+
+Инструкция по игре для пользователя:
+    1. При запуске игры нужно нажать на пробел (space), чтобы игра началась.
+    2. Стрелки вверх, вниз, влево и вправо, нужны для управления движением игрока в соответствующие стороны.
+    3. При нажатии на пробел (space) герой атакует и наносит урон врагу, который расположен рядом.
+    4. Убивайте врагов, получайте опыт, повышайте уровень, становитесь сильней и, по-итогу, дайте отпор финальному боссу.
+    5. При виде вас враги бегут к вам, если они подберутся на уровне взмаха меча, то они начнут вас атаковать
+        будьте осторожней.
+    6. Если вы получите достаточно урона, то вы погибнете и игра окончится для вас.
+    7. Получайте удовольствие игры!
